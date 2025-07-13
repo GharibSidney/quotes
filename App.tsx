@@ -10,7 +10,7 @@ import FavoritesScreen from './screens/FavoritesScreen';
 
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+export default function App(): JSX.Element {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -18,12 +18,14 @@ export default function App() {
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
+              let iconName: keyof typeof Ionicons.glyphMap;
 
               if (route.name === 'Quotes') {
                 iconName = focused ? 'home' : 'home-outline';
               } else if (route.name === 'Favorites') {
                 iconName = focused ? 'heart' : 'heart-outline';
+              } else {
+                iconName = 'home-outline';
               }
 
               return <Ionicons name={iconName} size={size} color={color} />;
@@ -47,4 +49,4 @@ export default function App() {
       </NavigationContainer>
     </SafeAreaProvider>
   );
-} 
+}

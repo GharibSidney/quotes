@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Quote } from "@/entities/Quote";
+import { Quote } from "../../Entities/Quote";
 
 const categories = [
   { value: "inspiration", label: "Inspiration" },

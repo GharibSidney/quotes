@@ -11,20 +11,21 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import QuoteGrid from '../components/QuoteGrid';
-import { QuoteService } from '../services/QuoteService';
+import QuoteService from '../services/QuoteService';
+import { Quote } from '../types/Quote';
 
 const { width } = Dimensions.get('window');
 
-export default function FavoritesScreen() {
-  const [favoriteQuotes, setFavoriteQuotes] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+export default function FavoritesScreen(): JSX.Element {
+  const [favoriteQuotes, setFavoriteQuotes] = useState<Quote[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     loadFavorites();
   }, []);
 
-  const loadFavorites = async () => {
+  const loadFavorites = async (): Promise<void> => {
     setIsLoading(true);
     try {
       const data = await QuoteService.getFavorites();
@@ -44,7 +45,6 @@ export default function FavoritesScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Ionicons name="heart" size={40} color="#EF4444" />
@@ -55,7 +55,6 @@ export default function FavoritesScreen() {
           </Text>
         </View>
 
-        {/* Search Bar */}
         <View style={styles.searchContainer}>
           <View style={styles.searchInputContainer}>
             <Ionicons name="search" size={20} color="#9CA3AF" style={styles.searchIcon} />
@@ -69,7 +68,6 @@ export default function FavoritesScreen() {
           </View>
         </View>
 
-        {/* Content */}
         {!isLoading && filteredQuotes.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Ionicons name="heart-outline" size={64} color="#D1D5DB" />
@@ -145,7 +143,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#1F2937',
-    textAlign: 'center',
   },
   emptyContainer: {
     flex: 1,
@@ -168,6 +165,3 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 });
-```
-
-```

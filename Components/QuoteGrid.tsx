@@ -6,13 +6,21 @@ import {
   FlatList,
   ActivityIndicator,
   Dimensions,
+  ListRenderItem,
 } from 'react-native';
 import QuoteWidget from './QuoteWidget';
+import { Quote } from '../types/Quote';
 
 const { width } = Dimensions.get('window');
 const numColumns = width > 768 ? 3 : width > 480 ? 2 : 1;
 
-export default function QuoteGrid({ quotes, onUpdate, isLoading }) {
+interface QuoteGridProps {
+  quotes: Quote[];
+  onUpdate: () => void;
+  isLoading: boolean;
+}
+
+export default function QuoteGrid({ quotes, onUpdate, isLoading }: QuoteGridProps): JSX.Element {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -36,7 +44,7 @@ export default function QuoteGrid({ quotes, onUpdate, isLoading }) {
     );
   }
 
-  const renderItem = ({ item, index }) => (
+  const renderItem: ListRenderItem<Quote> = ({ item, index }) => (
     <View style={styles.quoteContainer}>
       <QuoteWidget quote={item} onUpdate={onUpdate} />
     </View>
@@ -46,9 +54,9 @@ export default function QuoteGrid({ quotes, onUpdate, isLoading }) {
     <FlatList
       data={quotes}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={(item, index) => item.id?.toString() || index.toString()}
       numColumns={numColumns}
-      columnWrapperStyle={styles.row}
+      columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
       contentContainerStyle={styles.gridContainer}
       showsVerticalScrollIndicator={false}
     />
@@ -108,4 +116,4 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     marginBottom: 16,
   },
-}); 
+});

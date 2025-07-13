@@ -10,12 +10,13 @@ import {
   Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { QuoteService } from '../services/QuoteService';
+import QuoteService from '../services/QuoteService';
+import { Quote, QuoteBackgroundColor } from '../types/Quote';
 
 const { width } = Dimensions.get('window');
 const widgetSize = (width - 48) / 2;
 
-const backgroundGradients = {
+const backgroundGradients: Record<QuoteBackgroundColor, string[]> = {
   blue: ['#60A5FA', '#3B82F6'],
   purple: ['#A78BFA', '#8B5CF6'],
   green: ['#34D399', '#10B981'],
@@ -24,11 +25,16 @@ const backgroundGradients = {
   teal: ['#5EEAD4', '#14B8A6']
 };
 
-export default function QuoteWidget({ quote, onUpdate }) {
-  const [isLiked, setIsLiked] = useState(quote.is_favorite);
+interface QuoteWidgetProps {
+  quote: Quote;
+  onUpdate?: () => void;
+}
+
+export default function QuoteWidget({ quote, onUpdate }: QuoteWidgetProps): JSX.Element {
+  const [isLiked, setIsLiked] = useState<boolean>(quote.is_favorite || false);
   const [scaleValue] = useState(new Animated.Value(1));
 
-  const handleLike = async () => {
+  const handleLike = async (): Promise<void> => {
     Animated.sequence([
       Animated.timing(scaleValue, {
         toValue: 1.2,
@@ -45,15 +51,17 @@ export default function QuoteWidget({ quote, onUpdate }) {
     setIsLiked(!isLiked);
     
     try {
-      await QuoteService.update(quote.id, { ...quote, is_favorite: !isLiked });
-      if (onUpdate) onUpdate();
+      if (quote.id) {
+        await QuoteService.update(quote.id, { ...quote, is_favorite: !isLiked });
+        if (onUpdate) onUpdate();
+      }
     } catch (error) {
       setIsLiked(!isLiked); // Revert on error
       Alert.alert('Error', 'Failed to update quote');
     }
   };
 
-  const handleCopy = async () => {
+  const handleCopy = async (): Promise<void> => {
     try {
       // For React Native, you might want to use a clipboard library
       // For now, we'll just show an alert
@@ -63,7 +71,7 @@ export default function QuoteWidget({ quote, onUpdate }) {
     }
   };
 
-  const handleShare = async () => {
+  const handleShare = async (): Promise<void> => {
     try {
       await Share.share({
         message: `"${quote.text}" - ${quote.author}`,
@@ -74,7 +82,7 @@ export default function QuoteWidget({ quote, onUpdate }) {
     }
   };
 
-  const gradientColors = backgroundGradients[quote.background_color] || backgroundGradients.blue;
+  const gradientColors = backgroundGradients[quote.background_color || 'blue'] || backgroundGradients.blue;
 
   return (
     <View style={[styles.container, { backgroundColor: gradientColors[0] }]}>
@@ -178,4 +186,4 @@ const styles = StyleSheet.create({
     top: 12,
     right: 12,
   },
-}); 
+});
