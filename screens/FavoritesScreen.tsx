@@ -44,49 +44,47 @@ export default function FavoritesScreen(): JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <View style={styles.headerContent}>
-            <Ionicons name="heart" size={40} color="#EF4444" />
-            <Text style={styles.title}>Favorite Quotes</Text>
-          </View>
-          <Text style={styles.subtitle}>
-            Your most cherished quotes, all in one place
+      <View style={styles.header}>
+        <View style={styles.headerContent}>
+          <Ionicons name="heart" size={40} color="#EF4444" />
+          <Text style={styles.title}>Favorite Quotes</Text>
+        </View>
+        <Text style={styles.subtitle}>
+          Your most cherished quotes, all in one place
+        </Text>
+      </View>
+
+      <View style={styles.searchContainer}>
+        <View style={styles.searchInputContainer}>
+          <Ionicons name="search" size={20} color="#9CA3AF" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search your favorites..."
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholderTextColor="#9CA3AF"
+          />
+        </View>
+      </View>
+
+      {!isLoading && filteredQuotes.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Ionicons name="heart-outline" size={64} color="#D1D5DB" />
+          <Text style={styles.emptyTitle}>No favorites yet</Text>
+          <Text style={styles.emptySubtitle}>
+            {favoriteQuotes.length === 0 
+              ? "Start liking quotes to build your favorites collection!"
+              : "No quotes match your search. Try a different keyword."
+            }
           </Text>
         </View>
-
-        <View style={styles.searchContainer}>
-          <View style={styles.searchInputContainer}>
-            <Ionicons name="search" size={20} color="#9CA3AF" style={styles.searchIcon} />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Search your favorites..."
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              placeholderTextColor="#9CA3AF"
-            />
-          </View>
-        </View>
-
-        {!isLoading && filteredQuotes.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Ionicons name="heart-outline" size={64} color="#D1D5DB" />
-            <Text style={styles.emptyTitle}>No favorites yet</Text>
-            <Text style={styles.emptySubtitle}>
-              {favoriteQuotes.length === 0 
-                ? "Start liking quotes to build your favorites collection!"
-                : "No quotes match your search. Try a different keyword."
-              }
-            </Text>
-          </View>
-        ) : (
-          <QuoteGrid 
-            quotes={filteredQuotes} 
-            onUpdate={loadFavorites} 
-            isLoading={isLoading}
-          />
-        )}
-      </ScrollView>
+      ) : (
+        <QuoteGrid 
+          quotes={filteredQuotes} 
+          onUpdate={loadFavorites} 
+          isLoading={isLoading}
+        />
+      )}
     </SafeAreaView>
   );
 }

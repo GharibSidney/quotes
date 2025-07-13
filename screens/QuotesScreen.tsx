@@ -65,30 +65,28 @@ export default function QuotesScreen(): JSX.Element {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <Text style={styles.title}>
-            Your Quote<Text style={styles.titleGradient}> Collection</Text>
-          </Text>
-          <Text style={styles.subtitle}>
-            Curate and display your favorite quotes in beautiful, shareable widgets
-          </Text>
-        </View>
+      <View style={styles.header}>
+        <Text style={styles.title}>
+          Your Quote<Text style={styles.titleGradient}> Collection</Text>
+        </Text>
+        <Text style={styles.subtitle}>
+          Curate and display your favorite quotes in beautiful, shareable widgets
+        </Text>
+      </View>
 
-        <QuoteGrid 
-          quotes={filteredQuotes} 
-          onUpdate={loadQuotes} 
-          isLoading={isLoading}
-        />
+      <QuoteGrid 
+        quotes={filteredQuotes} 
+        onUpdate={loadQuotes} 
+        isLoading={isLoading}
+      />
 
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={() => setIsModalOpen(true)}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="add" size={24} color="white" />
-        </TouchableOpacity>
-      </ScrollView>
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => setIsModalOpen(true)}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="add" size={24} color="white" />
+      </TouchableOpacity>
 
       <CreateQuoteModal
         isVisible={isModalOpen}
