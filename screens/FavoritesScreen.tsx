@@ -13,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import QuoteGrid from '../components/QuoteGrid';
 import QuoteService from '../services/QuoteService';
 import { Quote } from '../types/Quote';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -21,9 +22,11 @@ export default function FavoritesScreen(): JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  useEffect(() => {
-    loadFavorites();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadFavorites();
+    }, [])
+  );
 
   const loadFavorites = async (): Promise<void> => {
     setIsLoading(true);

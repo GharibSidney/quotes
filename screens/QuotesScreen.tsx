@@ -70,7 +70,7 @@ export default function QuotesScreen(): JSX.Element {
           Your Quote<Text style={styles.titleGradient}> Collection</Text>
         </Text>
         <Text style={styles.subtitle}>
-          Curate and display your favorite quotes in beautiful, shareable widgets
+          Create and display your favorite quotes in beautiful, shareable widgets
         </Text>
       </View>
 

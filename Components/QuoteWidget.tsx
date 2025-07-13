@@ -33,8 +33,11 @@ interface QuoteWidgetProps {
 export default function QuoteWidget({ quote, onUpdate }: QuoteWidgetProps): JSX.Element {
   const [isLiked, setIsLiked] = useState<boolean>(quote.is_favorite || false);
   const [scaleValue] = useState(new Animated.Value(1));
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleLike = async (): Promise<void> => {
+    if (isProcessing) return; // Prevent rapid toggling
+    setIsProcessing(true);
     Animated.sequence([
       Animated.timing(scaleValue, {
         toValue: 1.2,
@@ -48,17 +51,41 @@ export default function QuoteWidget({ quote, onUpdate }: QuoteWidgetProps): JSX.
       }),
     ]).start();
 
-    setIsLiked(!isLiked);
-    
+    const newLiked = !isLiked;
+    setIsLiked(newLiked);
     try {
       if (quote.id) {
-        await QuoteService.update(quote.id, { ...quote, is_favorite: !isLiked });
+        await QuoteService.update(quote.id, { ...quote, is_favorite: newLiked });
         if (onUpdate) onUpdate();
       }
     } catch (error) {
-      setIsLiked(!isLiked); // Revert on error
+      setIsLiked(!newLiked); // Revert on error
       Alert.alert('Error', 'Failed to update quote');
     }
+    setIsProcessing(false);
+  };
+
+  const handleDelete = async (): Promise<void> => {
+    if (!quote.id) return;
+    Alert.alert(
+      'Delete Quote',
+      'Are you sure you want to delete this quote?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await QuoteService.delete(quote.id);
+              if (onUpdate) onUpdate();
+            } catch (error) {
+              Alert.alert('Error', 'Failed to delete quote');
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleCopy = async (): Promise<void> => {
@@ -107,7 +134,13 @@ export default function QuoteWidget({ quote, onUpdate }: QuoteWidgetProps): JSX.
             />
           </Animated.View>
         </TouchableOpacity>
-        
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={handleDelete}
+          activeOpacity={0.8}
+        >
+          <Ionicons name="trash-outline" size={18} color="#F87171" />
+        </TouchableOpacity>
         <View style={styles.rightActions}>
           <TouchableOpacity
             style={styles.actionButton}
