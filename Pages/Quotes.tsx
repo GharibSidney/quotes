@@ -54,7 +54,7 @@ export default function QuotesPage() {
             </span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Curate and display your favorite quotes in beautiful, shareable widgets
+            Create and display your favorite quotes in beautiful, shareable widgets
           </p>
         </motion.div>
 
