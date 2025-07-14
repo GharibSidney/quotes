@@ -12,7 +12,7 @@ import QuoteWidget from './QuoteWidget';
 import { Quote } from '../types/Quote';
 
 const { width } = Dimensions.get('window');
-const numColumns = width > 768 ? 3 : width > 480 ? 2 : 1;
+const numColumns = width > 768 ? 3 : width > 480 ? 2 : 2;
 
 interface QuoteGridProps {
   quotes: Quote[];
